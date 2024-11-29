@@ -1,0 +1,1 @@
+fastapi run ./backend/__main__.py

@@ -1,0 +1,1 @@
+fastapi dev ./backend/__main__.py
