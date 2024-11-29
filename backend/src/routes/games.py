@@ -75,8 +75,8 @@ async def add_games(game: schemas.GameModel):
 async def delete_game(game_id: int):
     
     try:
-        message = queries.delete_game(game_id)
-        return JSONResponse(content=message,
+        queries.delete_game(game_id)
+        return JSONResponse(content={"message": "Game deleted"},
                             status_code=status.HTTP_200_OK)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
