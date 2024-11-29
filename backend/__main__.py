@@ -1,9 +1,11 @@
 from fastapi import FastAPI
+from contextlib import asynccontextmanager
 from .src.routes import home, games
 from .src.utils import logs, db
 
 log = logs.Logger()
 
+@asynccontextmanager
 async def lifespan(app: FastAPI):
     try:
         log.info("App Started")
