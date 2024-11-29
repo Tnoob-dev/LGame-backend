@@ -38,7 +38,7 @@ class DB_Queries:
         try:
             log.info(f"Obtaining {game_name}")    
             with Session(self.engine) as session:
-                statement = select(self.object).where(db.Game.name == game_name)
+                statement = select(self.object).where(db.Game.name.lower() == game_name.lower())
                 result = session.exec(statement).first()
                 return result
         except Exception as e:
