@@ -14,7 +14,7 @@ class DB_Queries:
     
     def insert(self, game: db.Game) -> str:
         try:
-            log.info("Inserting new game...")
+            log.info(f"Inserting new game -> {game}")
             with Session(self.engine) as session:
                 session.add(game)
                 session.commit()
@@ -47,7 +47,7 @@ class DB_Queries:
     
     def delete_game(self, game_id: int) -> JSONResponse:
         try:
-            log.info("Deleting Game by ID")
+            log.info(f"Deleting Game -> ID: {game_id}")
             with Session(self.engine) as session:
                 statement = select(self.object).where(
                     self.object.id == game_id)
@@ -58,7 +58,6 @@ class DB_Queries:
                         session.delete(game)
                         log.info("Game Deleted")
                         session.commit()
-                        return {"message": "Game deleted"}
                 else:
                     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
         except Exception as e:

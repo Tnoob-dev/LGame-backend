@@ -1,12 +1,9 @@
 from sqlmodel import SQLModel, Field, create_engine, JSON, Column
 from typing import Optional, List
-from dotenv import load_dotenv
 from .logs import Logger
 import os
 
 log = Logger()
-
-load_dotenv("./backend/src/core/.env")
 
 class Game(SQLModel, table=True):
     id: Optional[int] | None = Field(default=None, primary_key=True)
@@ -17,14 +14,13 @@ class Game(SQLModel, table=True):
     description: str = Field()
     trailer: str = Field()
     
-postgre = os.getenv("DB_URL")
+lgame_sqliteDB = "sqlite:///./backend/src/core/GamesDB.db"
 
-engine = create_engine(postgre)
+engine = create_engine(lgame_sqliteDB)
 
 def create_tables():
     try:
         for table in SQLModel.metadata.tables.values():
-            
             if not engine.dialect.has_table(engine.connect(), table.name):    
                 log.info(f"Creating Table {table.name}")
                 table.create(engine)
