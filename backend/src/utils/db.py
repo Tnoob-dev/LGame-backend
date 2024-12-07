@@ -1,4 +1,4 @@
-from sqlmodel import SQLModel, Field, create_engine, JSON, Column
+from sqlmodel import SQLModel, Field, create_engine, JSON, Column, Relationship, Session, select
 from typing import Optional, List
 from .logs import Logger
 import os
@@ -7,13 +7,13 @@ log = Logger()
 
 class Game(SQLModel, table=True):
     id: Optional[int] | None = Field(default=None, primary_key=True)
-    name: str = Field()
+    name: str = Field(index=True)
     image: str = Field()
-    main_platform: str = Field()
-    platforms: List[str] = Field(sa_column=Column(JSON))
+    genre: List[str] = Field(sa_column=Column(JSON))
     description: str = Field()
     trailer: str = Field()
-    
+    console: str = Field(default=None)
+
 lgame_sqliteDB = "sqlite:///./backend/src/core/GamesDB.db"
 
 engine = create_engine(lgame_sqliteDB)
@@ -29,4 +29,3 @@ def create_tables():
     
     except Exception as e:
         log.error(e)
-

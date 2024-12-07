@@ -2,12 +2,12 @@ from sqlmodel import Session, select
 from fastapi import status
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import HTTPException
-from ..utils import db, logs
+from ..utils import db, logs, schemas
 from typing import List, Any, Type
 
 log = logs.Logger()
 
-class DB_Queries:
+class DB_Game_Queries:
     def __init__(self, engine: Any, object: Type[db.Game]) -> None:
         self.engine = engine
         self.object = object
@@ -34,12 +34,23 @@ class DB_Queries:
             log.error(f"Error -> {e}")
             raise str(e)
     
-    def get_game_by_name(self, game_name: str) -> db.Game | None:
+    def get_game_by_name(self, game_name: str) -> List[db.Game] | None:
         try:
-            log.info(f"Obtaining {game_name}")    
+            log.info(f"Obtaining Game: {game_name}")    
             with Session(self.engine) as session:
-                statement = select(self.object).where(db.Game.name == game_name)
-                result = session.exec(statement).first()
+                statement = select(self.object).where(self.object.name == game_name)
+                result = session.exec(statement).all()
+                return result
+        except Exception as e:
+            log.error(f"Error -> {e}")
+            raise str(e)
+    
+    def get_games_by_console(self, console: str) -> List[db.Game] | None:
+        try:
+            log.info(f"Obtaining console: {console}")
+            with Session(self.engine) as session:
+                statement = select(self.object).where(self.object.console == console)
+                result = session.exec(statement).all()
                 return result
         except Exception as e:
             log.error(f"Error -> {e}")
@@ -49,8 +60,7 @@ class DB_Queries:
         try:
             log.info(f"Deleting Game -> ID: {game_id}")
             with Session(self.engine) as session:
-                statement = select(self.object).where(
-                    self.object.id == game_id)
+                statement = select(self.object).where(self.object.id == game_id)
                 result = session.exec(statement)
                 game = result.first()
 

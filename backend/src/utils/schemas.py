@@ -7,7 +7,7 @@ class Response(BaseModel):
 class GameModel(BaseModel):
     name: str
     image: str
-    main_platform: str
-    platforms: List[str]
+    genre: List[str]
     description: str
     trailer: str
+    console: str

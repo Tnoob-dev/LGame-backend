@@ -15,8 +15,6 @@ async def lifespan(app: FastAPI):
     finally:
         log.info("App Closed")
 
-
-
 app = FastAPI(
     title="LGame-Backend",
     version="1.0.0",
