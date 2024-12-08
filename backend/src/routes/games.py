@@ -75,8 +75,9 @@ async def get_game_console(console: str):
                 "console": game.console,
                 "trailer": game.trailer
             })
-            
-        return JSONResponse(content=all_games,
+        
+        all_games_ord = sorted(all_games, key=lambda game: game["name"].lower())
+        return JSONResponse(content=all_games_ord,
                             status_code=status.HTTP_200_OK)
     except Exception as e:
         print(e)
