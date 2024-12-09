@@ -31,7 +31,8 @@ async def get_all_games():
                 "trailer": game.trailer
             })
             
-        return JSONResponse(content=all_games,
+        all_games_ord = sorted(all_games, key=lambda game: game["name"].lower())
+        return JSONResponse(content=all_games_ord,
                             status_code=status.HTTP_200_OK)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
