@@ -1,6 +1,7 @@
 from fastapi import APIRouter, status
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import HTTPException
+from fastapi_cache.decorator import cache
 from ..funcs import db_reqs
 from ..utils import logs, db, schemas
 from typing import List
@@ -15,6 +16,7 @@ router = APIRouter(
 queries = db_reqs.DB_Game_Queries(db.engine, db.Game)
 
 @router.get("/all", status_code=status.HTTP_200_OK, response_model=List[schemas.GameModel])
+@cache(expire=3600)
 async def get_all_games():
     
     try:
@@ -39,6 +41,7 @@ async def get_all_games():
                             detail=str(e))
 
 @router.get("/{game_name}", status_code=status.HTTP_200_OK, response_model=List[schemas.GameModel])
+@cache(expire=3600)
 async def get_game(game_name: str):
     
     try:
@@ -54,7 +57,7 @@ async def get_game(game_name: str):
                 "console": game.console,
                 "trailer": game.trailer
             })
-            
+
         return JSONResponse(content=all_games,
                             status_code=status.HTTP_200_OK)
     except Exception as e:
@@ -62,6 +65,7 @@ async def get_game(game_name: str):
                             detail=str(e))
 
 @router.get("/console/{console}", status_code=status.HTTP_200_OK, response_model=List[schemas.GameModel])
+@cache(expire=3600)
 async def get_game_console(console: str):
     try:
         games = queries.get_games_by_console(console)
